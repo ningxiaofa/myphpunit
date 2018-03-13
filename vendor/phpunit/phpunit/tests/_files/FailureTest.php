@@ -15,10 +15,10 @@ class FailureTest extends TestCase
 
     public function testAssertObjectEqualsObject()
     {
-        $a      = new stdClass;
+        $a      = new StdClass;
         $a->foo = 'bar';
 
-        $b      = new stdClass;
+        $b      = new StdClass;
         $b->bar = 'foo';
 
         $this->assertEquals($a, $b, 'message');
@@ -56,12 +56,12 @@ class FailureTest extends TestCase
 
     public function testAssertObjectSameObject()
     {
-        $this->assertSame(new stdClass, new stdClass, 'message');
+        $this->assertSame(new StdClass, new StdClass, 'message');
     }
 
     public function testAssertObjectSameNull()
     {
-        $this->assertSame(new stdClass, null, 'message');
+        $this->assertSame(new StdClass, null, 'message');
     }
 
     public function testAssertFloatSameFloat()

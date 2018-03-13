@@ -481,6 +481,9 @@ class Test
 
                 if (is_array($data)) {
                     $result = array_merge($result, $data);
+                } elseif ($data instanceof \Iterator) {
+                    $data   = iterator_to_array($data);
+                    $result = array_merge($result, $data);
                 }
             }
 
@@ -534,7 +537,6 @@ class Test
     private static function cleanUpMultiLineAnnotation($docComment)
     {
         //removing initial '   * ' for docComment
-        $docComment = str_replace("\r\n", "\n", $docComment);
         $docComment = preg_replace('/' . '\n' . '\s*' . '\*' . '\s?' . '/', "\n", $docComment);
         $docComment = substr($docComment, 0, -1);
         $docComment = rtrim($docComment, "\n");

@@ -319,6 +319,8 @@ abstract class ResultPrinter extends Printer implements TestListener
         $this->currentTestMethodPrettified = null;
     }
 
+    /**
+     */
     protected function doEndClass()
     {
         foreach ($this->tests as $name => $data) {

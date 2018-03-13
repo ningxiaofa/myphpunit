@@ -21,7 +21,7 @@ use PHPUnit\Util\InvalidArgumentHelper;
 use PHPUnit\Util\Printer;
 use ReflectionClass;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Exception as OriginalCodeCoverageException;
+use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
 use SebastianBergmann\CodeCoverage\CoveredCodeNotExecutedException as OriginalCoveredCodeNotExecutedException;
 use SebastianBergmann\CodeCoverage\MissingCoversAnnotationException as OriginalMissingCoversAnnotationException;
 use SebastianBergmann\CodeCoverage\UnintentionallyCoveredCodeException;
@@ -614,18 +614,10 @@ class TestResult implements Countable
     {
         Assert::resetCount();
 
-        $coversNothing = false;
-
         if ($test instanceof TestCase) {
             $test->setRegisterMockObjectsFromTestArgumentsRecursively(
                 $this->registerMockObjectsFromTestArgumentsRecursively
             );
-
-            $annotations = $test->getAnnotations();
-
-            if (isset($annotations['class']['coversNothing']) || isset($annotations['method']['coversNothing'])) {
-                $coversNothing = true;
-            }
         }
 
         $error      = false;
@@ -641,7 +633,7 @@ class TestResult implements Countable
 
         if ($this->convertErrorsToExceptions) {
             $oldErrorHandler = set_error_handler(
-                [\PHPUnit\Util\ErrorHandler::class, 'handleError'],
+                ['PHPUnit\Util\ErrorHandler', 'handleError'],
                 E_ALL | E_STRICT
             );
 
@@ -653,8 +645,7 @@ class TestResult implements Countable
         }
 
         $collectCodeCoverage = $this->codeCoverage !== null &&
-                               !$test instanceof WarningTestCase &&
-                               !$coversNothing;
+            !$test instanceof WarningTestCase;
 
         if ($collectCodeCoverage) {
             $this->codeCoverage->start($test);
@@ -696,16 +687,6 @@ class TestResult implements Countable
             } else {
                 $test->runBare();
             }
-        } catch (PHP_Invoker_TimeoutException $e) {
-            $this->addFailure(
-                $test,
-                new PHPUnit_Framework_RiskyTestError(
-                    $e->getMessage()
-                ),
-                $_timeout
-            );
-
-            $risky = true;
         } catch (PHPUnit_Framework_MockObject_Exception $e) {
             $e = new Warning(
                 $e->getMessage()
@@ -838,7 +819,7 @@ class TestResult implements Countable
                         $time
                     );
                 }
-            } catch (OriginalCodeCoverageException $cce) {
+            } catch (CodeCoverageException $cce) {
                 $error = true;
 
                 if (!isset($e)) {

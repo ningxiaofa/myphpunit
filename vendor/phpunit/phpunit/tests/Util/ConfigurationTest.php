@@ -8,13 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace PHPUnit\Util;
-
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Exception;
 use PHPUnit\TextUI\ResultPrinter;
+use PHPUnit\Util\Configuration;
 
-class ConfigurationTest extends TestCase
+class Util_ConfigurationTest extends TestCase
 {
     /**
      * @var Configuration
@@ -30,12 +28,12 @@ class ConfigurationTest extends TestCase
 
     public function testExceptionIsThrownForNotExistingConfigurationFile()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(PHPUnit\Framework\Exception::class);
 
         Configuration::getInstance('not_existing_file.xml');
     }
 
-    public function testShouldReadColorsWhenTrueInConfigurationFile()
+    public function testShouldReadColorsWhenTrueInConfigurationfile()
     {
         $configurationFilename =  dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'configuration.colors.true.xml';
         $configurationInstance = Configuration::getInstance($configurationFilename);
@@ -44,7 +42,7 @@ class ConfigurationTest extends TestCase
         $this->assertEquals(ResultPrinter::COLOR_AUTO, $configurationValues['colors']);
     }
 
-    public function testShouldReadColorsWhenFalseInConfigurationFile()
+    public function testShouldReadColorsWhenFalseInConfigurationfile()
     {
         $configurationFilename =  dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'configuration.colors.false.xml';
         $configurationInstance = Configuration::getInstance($configurationFilename);
@@ -53,7 +51,7 @@ class ConfigurationTest extends TestCase
         $this->assertEquals(ResultPrinter::COLOR_NEVER, $configurationValues['colors']);
     }
 
-    public function testShouldReadColorsWhenEmptyInConfigurationFile()
+    public function testShouldReadColorsWhenEmptyInConfigurationfile()
     {
         $configurationFilename =  dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'configuration.colors.empty.xml';
         $configurationInstance = Configuration::getInstance($configurationFilename);
@@ -62,7 +60,7 @@ class ConfigurationTest extends TestCase
         $this->assertEquals(ResultPrinter::COLOR_NEVER, $configurationValues['colors']);
     }
 
-    public function testShouldReadColorsWhenInvalidInConfigurationFile()
+    public function testShouldReadColorsWhenInvalidInConfigurationfile()
     {
         $configurationFilename =  dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'configuration.colors.invalid.xml';
         $configurationInstance = Configuration::getInstance($configurationFilename);
@@ -177,7 +175,7 @@ class ConfigurationTest extends TestCase
                 2 => 'April',
                 3 => 19.78,
                 4 => null,
-                5 => new \stdClass,
+                5 => new stdClass,
                 6 => dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'MyTestFile.php',
                 7 => dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'MyRelativePath',
               ],
@@ -255,8 +253,8 @@ class ConfigurationTest extends TestCase
 
         $path = dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . '.' . PATH_SEPARATOR . '/path/to/lib';
         $this->assertStringStartsWith($path, ini_get('include_path'));
-        $this->assertEquals(false, \FOO);
-        $this->assertEquals(true, \BAR);
+        $this->assertEquals(false, FOO);
+        $this->assertEquals(true, BAR);
         $this->assertEquals(false, $GLOBALS['foo']);
         $this->assertEquals(true, $_ENV['foo']);
         $this->assertEquals(true, getenv('foo'));
@@ -429,17 +427,5 @@ class ConfigurationTest extends TestCase
         $names = $configuration->getTestSuiteNames();
 
         $this->assertEquals(['Suite One', 'Suite Two'], $names);
-    }
-
-    public function testTestSuiteConfigurationForASingleFileInASuite()
-    {
-        $configuration = Configuration::getInstance(
-            dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'configuration.one-file-suite.xml'
-        );
-
-        $config = $configuration->getTestSuiteConfiguration();
-        $tests  = $config->tests();
-
-        $this->assertEquals(1, count($tests));
     }
 }

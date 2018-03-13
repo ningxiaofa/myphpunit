@@ -10,6 +10,8 @@
 
 namespace PHPUnit\Util;
 
+/**
+ */
 class ConfigurationGenerator
 {
     /**

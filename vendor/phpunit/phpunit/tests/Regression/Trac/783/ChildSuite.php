@@ -9,8 +9,8 @@ class ChildSuite
     public static function suite()
     {
         $suite = new TestSuite('Child');
-        $suite->addTestSuite(OneTest::class);
-        $suite->addTestSuite(TwoTest::class);
+        $suite->addTestSuite('OneTest');
+        $suite->addTestSuite('TwoTest');
 
         return $suite;
     }

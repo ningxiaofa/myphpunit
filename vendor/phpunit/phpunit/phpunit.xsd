@@ -29,8 +29,8 @@
   <xs:complexType name="whiteListType">
     <xs:complexContent>
       <xs:extension base="filterType">
-        <xs:attribute name="addUncoveredFilesFromWhitelist" default="true" type="xs:boolean"/>
-        <xs:attribute name="processUncoveredFilesFromWhitelist" default="false" type="xs:boolean"/>
+        <xs:attribute name="addUncoveredFilesFromWhitelist" default="false" type="xs:boolean"/>
+        <xs:attribute name="processUncoveredFilesFromWhitelist" default="true" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -99,18 +99,6 @@
       <xs:element name="directory" type="xs:anyURI" minOccurs="0" maxOccurs="unbounded"/>
     </xs:choice>
   </xs:group>
-  <xs:simpleType name="columnsType">
-    <xs:union>
-      <xs:simpleType>
-        <xs:restriction base="xs:integer"/>
-      </xs:simpleType>
-      <xs:simpleType>
-        <xs:restriction base="xs:string">
-          <xs:enumeration value="max"/>
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:union>
-  </xs:simpleType>
   <xs:complexType name="loggersType">
     <xs:sequence>
       <xs:element name="log" type="loggerType" maxOccurs="unbounded"/>
@@ -197,12 +185,12 @@
     <xs:attributeGroup ref="configAttributeGroup"/>
   </xs:complexType>
   <xs:attributeGroup name="configAttributeGroup">
-    <xs:attribute name="backupGlobals" type="xs:boolean" default="false"/>
+    <xs:attribute name="backupGlobals" type="xs:boolean" default="true"/>
     <xs:attribute name="backupStaticAttributes" type="xs:boolean" default="false"/>
     <xs:attribute name="bootstrap" type="xs:anyURI"/>
     <xs:attribute name="cacheTokens" type="xs:boolean"/>
     <xs:attribute name="colors" type="xs:boolean" default="false"/>
-    <xs:attribute name="columns" type="columnsType" default="80"/>
+    <xs:attribute name="columns" type="xs:integer" default="80"/>
     <xs:attribute name="convertErrorsToExceptions" type="xs:boolean" default="true"/>
     <xs:attribute name="convertNoticesToExceptions" type="xs:boolean" default="true"/>
     <xs:attribute name="convertWarningsToExceptions" type="xs:boolean" default="true"/>
@@ -221,7 +209,7 @@
     <xs:attribute name="beStrictAboutChangesToGlobalState" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutOutputDuringTests" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutResourceUsageDuringSmallTests" type="xs:boolean" default="false"/>
-    <xs:attribute name="beStrictAboutTestsThatDoNotTestAnything" type="xs:boolean" default="true"/>
+    <xs:attribute name="beStrictAboutTestsThatDoNotTestAnything" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutTodoAnnotatedTests" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutCoversAnnotation" type="xs:boolean" default="false"/>
     <xs:attribute name="enforceTimeLimit" type="xs:boolean" default="false"/>

@@ -9,8 +9,11 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use PHPUnit\Util\RegularExpression as RegularExpressionUtil;
+use PHPUnit\Framework\Exception;
+use PHPUnit\Util\RegularExpression;
 
+/**
+ */
 class ExceptionMessageRegularExpression extends Constraint
 {
     /**
@@ -31,16 +34,16 @@ class ExceptionMessageRegularExpression extends Constraint
      * Evaluates the constraint for parameter $other. Returns true if the
      * constraint is met, false otherwise.
      *
-     * @param \PHPUnit\Framework\Exception $other
+     * @param Exception $other
      *
      * @return bool
      */
     protected function matches($other)
     {
-        $match = RegularExpressionUtil::safeMatch($this->expectedMessageRegExp, $other->getMessage());
+        $match = RegularExpression::safeMatch($this->expectedMessageRegExp, $other->getMessage());
 
         if (false === $match) {
-            throw new \PHPUnit\Framework\Exception(
+            throw new Exception(
                 "Invalid expected exception message regex given: '{$this->expectedMessageRegExp}'"
             );
         }

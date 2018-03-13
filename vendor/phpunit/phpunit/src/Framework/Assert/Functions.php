@@ -12,6 +12,7 @@ use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\LogicalAnd;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
 use PHPUnit\Framework\Constraint\Attribute;
+use PHPUnit\Framework\Constraint\Callback;
 use PHPUnit\Framework\Constraint\ClassHasAttribute;
 use PHPUnit\Framework\Constraint\ClassHasStaticAttribute;
 use PHPUnit\Framework\Constraint\FileExists;
@@ -1699,21 +1700,6 @@ function containsOnlyInstancesOf($classname)
 {
     return call_user_func_array(
         'PHPUnit\Framework\Assert::containsOnlyInstancesOf',
-        func_get_args()
-    );
-}
-
-/**
- * Returns a PHPUnit_Framework_Constraint_Count matcher object.
- *
- * @param int $count
- *
- * @return Count
- */
-function countOf($count)
-{
-    return call_user_func_array(
-        'PHPUnit\Framework\Assert::countOf',
         func_get_args()
     );
 }

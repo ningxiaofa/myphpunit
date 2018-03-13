@@ -48,6 +48,8 @@ class PHPUnit_Framework_MockObject_InvocationMocker implements PHPUnit_Framework
         $this->matchers[] = $matcher;
     }
 
+    /**
+     */
     public function hasMatchers()
     {
         foreach ($this->matchers as $matcher) {

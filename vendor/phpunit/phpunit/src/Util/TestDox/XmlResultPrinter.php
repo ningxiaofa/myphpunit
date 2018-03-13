@@ -21,6 +21,8 @@ use PHPUnit\Framework\Test;
 use PHPUnit\Util\Printer;
 use ReflectionClass;
 
+/**
+ */
 class XmlResultPrinter extends Printer implements TestListener
 {
     /**

@@ -167,6 +167,8 @@ class Configuration
         $this->xpath    = new DOMXPath($this->document);
     }
 
+    /**
+     */
     final private function __clone()
     {
     }
@@ -953,7 +955,7 @@ class Configuration
         }
 
         foreach ($testSuiteNode->getElementsByTagName('file') as $fileNode) {
-            if (!empty($testSuiteFilter) && !in_array($fileNode->parentNode->getAttribute('name'), $testSuiteFilter)) {
+            if ($testSuiteFilter && $fileNode->parentNode->getAttribute('name') != $testSuiteFilter) {
                 continue;
             }
 

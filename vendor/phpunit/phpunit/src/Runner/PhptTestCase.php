@@ -12,6 +12,7 @@ namespace PHPUnit\Runner;
 use PHP_Timer;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\Test;
@@ -59,6 +60,7 @@ class PhptTestCase implements Test, SelfDescribing
         'report_memleaks=0',
         'report_zend_debug=0',
         'safe_mode=0',
+        'track_errors=1',
         'xdebug.default_enable=0'
     ];
 

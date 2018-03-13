@@ -58,8 +58,8 @@ class Command
      */
     protected $longOptions = [
         'atleast-version='          => null,
+        'backup-globals'            => null,
         'bootstrap='                => null,
-        'check-version'             => null,
         'colors=='                  => null,
         'columns='                  => null,
         'configuration='            => null,
@@ -77,7 +77,6 @@ class Command
         'exclude-group='            => null,
         'filter='                   => null,
         'generate-configuration'    => null,
-        'globals-backup'            => null,
         'group='                    => null,
         'help'                      => null,
         'include-path='             => null,
@@ -281,6 +280,10 @@ class Command
      */
     protected function handleArguments(array $argv)
     {
+        if (defined('__PHPUNIT_PHAR__')) {
+            $this->longOptions['check-version'] = null;
+        }
+
         try {
             $this->options = Getopt::getopt(
                 $argv,
@@ -573,11 +576,10 @@ class Command
                     break;
 
                 case '--atleast-version':
-                    if (version_compare(Version::id(), $option[1], '>=')) {
-                        exit(TestRunner::SUCCESS_EXIT);
-                    }
-
-                    exit(TestRunner::FAILURE_EXIT);
+                    exit(version_compare(Version::id(), $option[1], '>=')
+                        ? TestRunner::SUCCESS_EXIT
+                        : TestRunner::FAILURE_EXIT
+                    );
                     break;
 
                 case '--version':
@@ -632,7 +634,6 @@ class Command
                 default:
                     $optionName = str_replace('--', '', $option[0]);
 
-                    $handler = null;
                     if (isset($this->longOptions[$optionName])) {
                         $handler = $this->longOptions[$optionName];
                     } elseif (isset($this->longOptions[$optionName . '='])) {
@@ -913,6 +914,8 @@ class Command
         }
     }
 
+    /**
+     */
     protected function handleVersionCheck()
     {
         $this->printVersionString();
@@ -921,11 +924,8 @@ class Command
         $isOutdated    = version_compare($latestVersion, Version::id(), '>');
 
         if ($isOutdated) {
-            printf(
-                "You are not using the latest version of PHPUnit.\n" .
-                "The latest version is PHPUnit %s.\n",
-                $latestVersion
-            );
+            print "You are not using the latest version of PHPUnit.\n";
+            print 'Use "phpunit --self-upgrade" to install PHPUnit ' . $latestVersion . "\n";
         } else {
             print "You are using the latest version of PHPUnit.\n";
         }
@@ -1029,9 +1029,12 @@ Miscellaneous Options:
   -h|--help                   Prints this usage information.
   --version                   Prints the version and exits.
   --atleast-version <min>     Checks that version is greater than min and exits.
-  --check-version             Check whether PHPUnit is the latest version.
 
 EOT;
+
+        if (defined('__PHPUNIT_PHAR__')) {
+            print "\n  --check-version             Check whether PHPUnit is the latest version.";
+        }
     }
 
     /**

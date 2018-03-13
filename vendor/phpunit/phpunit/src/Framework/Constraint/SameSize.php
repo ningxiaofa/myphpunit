@@ -9,6 +9,8 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
+/**
+ */
 class SameSize extends Count
 {
     /**

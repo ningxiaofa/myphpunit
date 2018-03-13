@@ -8,6 +8,8 @@
  * file that was distributed with this source code.
  */
 
+/**
+ */
 class PHPUnit_Framework_MockObject_BadMethodCallException extends BadMethodCallException implements PHPUnit_Framework_MockObject_Exception
 {
 }

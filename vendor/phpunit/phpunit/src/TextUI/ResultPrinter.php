@@ -417,6 +417,8 @@ class ResultPrinter extends Printer implements TestListener
         }
     }
 
+    /**
+     */
     public function printWaitPrompt()
     {
         $this->write("\n<RETURN> to continue\n");

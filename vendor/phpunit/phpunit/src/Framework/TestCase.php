@@ -57,7 +57,7 @@ use Throwable;
  *
  * To define a TestCase
  *
- *   1) Implement a subclass of PHPUnit\Framework\TestCase.
+ *   1) Implement a subclass of PHPUnit_Framework_TestCase.
  *   2) Define instance variables that store the state of the fixture.
  *   3) Initialize the fixture state by overriding setUp().
  *   4) Clean-up after a test by overriding tearDown().
@@ -69,7 +69,7 @@ use Throwable;
  *
  * <code>
  * <?php
- * class MathTest extends PHPUnit\Framework\TestCase
+ * class MathTest extends PHPUnit_Framework_TestCase
  * {
  *     public $value1;
  *     public $value2;
@@ -363,6 +363,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
         return 1;
     }
 
+    /**
+     */
     public function getGroups()
     {
         return $this->groups;
@@ -622,6 +624,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
         $this->registerMockObjectsFromTestArgumentsRecursively = $flag;
     }
 
+    /**
+     */
     protected function setExpectedExceptionFromAnnotation()
     {
         try {
@@ -655,6 +659,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
         $this->useErrorHandler = $useErrorHandler;
     }
 
+    /**
+     */
     protected function setUseErrorHandlerFromAnnotation()
     {
         try {
@@ -670,6 +676,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
         }
     }
 
+    /**
+     */
     protected function checkRequirements()
     {
         if (!$this->name || !method_exists($this, $this->name)) {
@@ -696,6 +704,9 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
         return $this->status;
     }
 
+    /**
+     * @since Method available since Release 5.7.6
+     */
     public function markAsRisky()
     {
         $this->status = BaseTestRunner::STATUS_RISKY;
@@ -1591,17 +1602,17 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
     protected function getMockFromWsdl($wsdlFile, $originalClassName = '', $mockClassName = '', array $methods = [], $callOriginalConstructor = true, array $options = [])
     {
         if ($originalClassName === '') {
-            $originalClassName = pathinfo(basename(parse_url($wsdlFile)['path']), PATHINFO_FILENAME);
+            $originalClassName = str_replace('.wsdl', '', basename($wsdlFile));
         }
 
         if (!class_exists($originalClassName)) {
             eval(
-                $this->getMockObjectGenerator()->generateClassFromWsdl(
-                    $wsdlFile,
-                    $originalClassName,
-                    $methods,
-                    $options
-                )
+            $this->getMockObjectGenerator()->generateClassFromWsdl(
+                $wsdlFile,
+                $originalClassName,
+                $methods,
+                $options
+            )
             );
         }
 
@@ -1665,12 +1676,13 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
      * @param bool   $callOriginalConstructor
      * @param bool   $callOriginalClone
      * @param bool   $callAutoload
+     * @param bool   $cloneArguments
      *
      * @return object
      *
      * @throws Exception
      */
-    protected function getObjectForTrait($traitName, array $arguments = [], $traitClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
+    protected function getObjectForTrait($traitName, array $arguments = [], $traitClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false)
     {
         return $this->getMockObjectGenerator()->getObjectForTrait(
             $traitName,
@@ -1678,7 +1690,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
             $traitClassName,
             $callOriginalConstructor,
             $callOriginalClone,
-            $callAutoload
+            $callAutoload,
+            $cloneArguments
         );
     }
 
@@ -1951,6 +1964,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
         return new TestResult;
     }
 
+    /**
+     */
     protected function handleDependencies()
     {
         if (!empty($this->dependencies) && !$this->inIsolation) {
@@ -2119,6 +2134,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
         return $this->mockObjectGenerator;
     }
 
+    /**
+     */
     private function startOutputBuffering()
     {
         ob_start();
@@ -2127,6 +2144,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
         $this->outputBufferingLevel  = ob_get_level();
     }
 
+    /**
+     */
     private function stopOutputBuffering()
     {
         if (ob_get_level() != $this->outputBufferingLevel) {
@@ -2158,13 +2177,15 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
 
     private function snapshotGlobalState()
     {
-        if ($this->runTestInSeparateProcess ||
-            $this->inIsolation ||
-            (!$this->backupGlobals === true && !$this->backupStaticAttributes)) {
+        $backupGlobals = $this->backupGlobals === null || $this->backupGlobals === true;
+
+        if ($this->runTestInSeparateProcess || $this->inIsolation ||
+            (!$backupGlobals && !$this->backupStaticAttributes)
+        ) {
             return;
         }
 
-        $this->snapshot = $this->createGlobalStateSnapshot($this->backupGlobals === true);
+        $this->snapshot = $this->createGlobalStateSnapshot($backupGlobals);
     }
 
     private function restoreGlobalState()
@@ -2173,11 +2194,13 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
             return;
         }
 
+        $backupGlobals = $this->backupGlobals === null || $this->backupGlobals === true;
+
         if ($this->beStrictAboutChangesToGlobalState) {
             try {
                 $this->compareGlobalStateSnapshots(
                     $this->snapshot,
-                    $this->createGlobalStateSnapshot($this->backupGlobals === true)
+                    $this->createGlobalStateSnapshot($backupGlobals)
                 );
             } catch (RiskyTestError $rte) {
                 // Intentionally left empty
@@ -2186,7 +2209,7 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
 
         $restorer = new Restorer;
 
-        if ($this->backupGlobals === true) {
+        if ($backupGlobals) {
             $restorer->restoreGlobalVariables($this->snapshot);
         }
 
@@ -2224,7 +2247,6 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
             $blacklist->addClassNamePrefix('Symfony');
             $blacklist->addClassNamePrefix('Text_Template');
             $blacklist->addClassNamePrefix('Doctrine\Instantiator');
-            $blacklist->addClassNamePrefix('Prophecy');
 
             foreach ($this->backupStaticAttributesBlacklist as $class => $attributes) {
                 foreach ($attributes as $attribute) {
@@ -2346,9 +2368,8 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
 
     /**
      * @param array $testArguments
-     * @param array $originalTestArguments
      */
-    private function registerMockObjectsFromTestArguments(array $testArguments, array &$visited = [])
+    private function registerMockObjectsFromTestArguments(array $testArguments)
     {
         if ($this->registerMockObjectsFromTestArgumentsRecursively) {
             $enumerator = new Enumerator;
@@ -2366,18 +2387,15 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
                     }
 
                     $this->registerMockObject($testArgument);
-                } elseif (is_array($testArgument) && !in_array($testArgument, $visited, true)) {
-                    $visited[] = $testArgument;
-
-                    $this->registerMockObjectsFromTestArguments(
-                        $testArgument,
-                        $visited
-                    );
+                } elseif (is_array($testArgument)) {
+                    $this->registerMockObjectsFromTestArguments($testArgument);
                 }
             }
         }
     }
 
+    /**
+     */
     private function setDoesNotPerformAssertionsFromAnnotation()
     {
         $annotations = $this->getAnnotations();

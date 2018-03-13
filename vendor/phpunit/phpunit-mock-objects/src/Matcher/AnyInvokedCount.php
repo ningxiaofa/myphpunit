@@ -22,6 +22,8 @@ class PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount extends PHPUnit_Frame
         return 'invoked zero or more times';
     }
 
+    /**
+     */
     public function verify()
     {
     }

@@ -9,6 +9,8 @@
  */
 namespace PHPUnit\Runner\Filter;
 
+/**
+ */
 class IncludeGroupFilterIterator extends GroupFilterIterator
 {
     /**

@@ -203,6 +203,8 @@ class DefaultPhpProcess extends AbstractPhpProcess
         fwrite($pipe, $job);
     }
 
+    /**
+     */
     protected function cleanup()
     {
         if ($this->tempFile) {

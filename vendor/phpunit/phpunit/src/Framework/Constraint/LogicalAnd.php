@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -29,7 +30,7 @@ class LogicalAnd extends Constraint
     /**
      * @param Constraint[] $constraints
      *
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      */
     public function setConstraints(array $constraints)
     {
@@ -37,7 +38,7 @@ class LogicalAnd extends Constraint
 
         foreach ($constraints as $constraint) {
             if (!($constraint instanceof Constraint)) {
-                throw new \PHPUnit\Framework\Exception(
+                throw new Exception(
                     'All parameters to ' . __CLASS__ .
                     ' must be a constraint object.'
                 );

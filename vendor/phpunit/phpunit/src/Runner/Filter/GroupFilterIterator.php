@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestSuite;
 use RecursiveFilterIterator;
 use RecursiveIterator;
 
+/**
+ */
 abstract class GroupFilterIterator extends RecursiveFilterIterator
 {
     /**

@@ -7,12 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace PHPUnit\Framework\Constraint;
-
+use PHPUnit\Framework\Constraint\JsonMatches;
 use PHPUnit\Framework\TestCase;
 
-class JsonMatchesTest extends TestCase
+class Framework_Constraint_JsonMatchesTest extends TestCase
 {
     /**
      * @dataProvider evaluateDataprovider
@@ -20,7 +18,6 @@ class JsonMatchesTest extends TestCase
     public function testEvaluate($expected, $jsonOther, $jsonValue)
     {
         $constraint = new JsonMatches($jsonValue);
-
         $this->assertEquals($expected, $constraint->evaluate($jsonOther, '', true));
     }
 
