@@ -12,7 +12,6 @@ class CalculateServiceTest extends TestCase
     {
 
         $ourservice = new Src\CalculateService();
-
         $this->assertEquals(8, $ourservice->abs(-4));
 
     }
