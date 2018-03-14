@@ -12,4 +12,5 @@ class BookTest extends TestCase
         $book->pushBook(1,"《三体》");
         $this->assertEquals('《三体》',$book->getBook(1) );
     }
+
 }
